@@ -15,8 +15,7 @@ Welcome to the Product Management Admin Dashboard project! This React applicatio
 - **Charts Visualization**: Visualize product sales performance with interactive charts.
 - **Calendar Integration**: View and manage product events and deadlines on a calendar.
 - **Kanban Board**: Organize and track product development stages using a kanban board.
-- **Tables**: Detailed listings of products with sortable columns and pagination.
-- **Responsive Design**: Ensures optimal viewing experience across various devices.
+- **Tables**: Detailed listings of products with sortable columns.
 
 ## Installation
 
