@@ -1,51 +1,77 @@
 import React, { useState } from 'react';
+import * as XLSX from 'xlsx';
 
 const TablesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('orders');
+  const [categoriesData, setCategoriesData] = useState({
+    orders: [
+      { id: 1, customer: 'John Doe', product: 'Laptop', quantity: 2, total: '$2000', date: '2023-05-10', status: 'pending' },
+      { id: 2, customer: 'Jane Smith', product: 'Smartphone', quantity: 1, total: '$800', date: '2023-05-12', status: 'active' },
+      { id: 3, customer: 'Mike Johnson', product: 'Tablet', quantity: 3, total: '$1200', date: '2023-05-15', status: 'active' },
+      { id: 4, customer: 'Emily Brown', product: 'Monitor', quantity: 1, total: '$600', date: '2023-05-18', status: 'completed' },
+      { id: 5, customer: 'Chris Davis', product: 'Keyboard', quantity: 2, total: '$200', date: '2023-05-20', status: 'pending' },
+      { id: 6, customer: 'Sarah White', product: 'Mouse', quantity: 1, total: '$50', date: '2023-05-22', status: 'active' },
+      { id: 7, customer: 'Alex Green', product: 'Printer', quantity: 1, total: '$300', date: '2023-05-25', status: 'pending' },
+      { id: 8, customer: 'Grace Wilson', product: 'Headphones', quantity: 2, total: '$400', date: '2023-05-28', status: 'completed' },
+      { id: 9, customer: 'Olivia Taylor', product: 'Camera', quantity: 1, total: '$900', date: '2023-05-30', status: 'completed' },
+      { id: 10, customer: 'Ethan Martinez', product: 'Smartwatch', quantity: 1, total: '$350', date: '2023-06-01', status: 'pending' },
+    ],
+    sales: [
+      { id: 1, customer: 'Alice Brown', product: 'Tablet', quantity: 3, total: '$1500', date: '2023-05-10' },
+      { id: 2, customer: 'Bob Green', product: 'Headphones', quantity: 2, total: '$300', date: '2023-05-12' },
+      { id: 3, customer: 'Sophia Lee', product: 'Smartphone', quantity: 1, total: '$800', date: '2023-05-15' },
+      { id: 4, customer: 'William Clark', product: 'Laptop', quantity: 2, total: '$2000', date: '2023-05-18' },
+      { id: 5, customer: 'Zoe Hall', product: 'Keyboard', quantity: 2, total: '$200', date: '2023-05-20' },
+      { id: 6, customer: 'Lucas Turner', product: 'Mouse', quantity: 1, total: '$50', date: '2023-05-22' },
+      { id: 7, customer: 'Ava Hill', product: 'Monitor', quantity: 1, total: '$600', date: '2023-05-25' },
+      { id: 8, customer: 'Jack Scott', product: 'Printer', quantity: 1, total: '$300', date: '2023-05-28' },
+      { id: 9, customer: 'Lily Reed', product: 'Camera', quantity: 1, total: '$900', date: '2023-05-30' },
+      { id: 10, customer: 'Noah Baker', product: 'Smartwatch', quantity: 1, total: '$350', date: '2023-06-01' },
+    ],
+    customers: [
+      { id: 1, name: 'Emily Johnson', email: 'emily@example.com', phone: '123-456-7890', city: 'New York', country: 'USA' },
+      { id: 2, name: 'Michael Davis', email: 'michael@example.com', phone: '987-654-3210', city: 'Los Angeles', country: 'USA' },
+      { id: 3, name: 'Sophie Wilson', email: 'sophie@example.com', phone: '456-789-0123', city: 'London', country: 'UK' },
+      { id: 4, name: 'Daniel Brown', email: 'daniel@example.com', phone: '321-654-9870', city: 'Toronto', country: 'Canada' },
+      { id: 5, name: 'Emma Miller', email: 'emma@example.com', phone: '789-012-3456', city: 'Berlin', country: 'Germany' },
+      { id: 6, name: 'Matthew Harris', email: 'matthew@example.com', phone: '234-567-8901', city: 'Sydney', country: 'Australia' },
+      { id: 7, name: 'Olivia Martinez', email: 'olivia@example.com', phone: '567-890-1234', city: 'Paris', country: 'France' },
+      { id: 8, name: 'Lucas Robinson', email: 'lucas@example.com', phone: '890-123-4567', city: 'Tokyo', country: 'Japan' },
+      { id: 9, name: 'Chloe Allen', email: 'chloe@example.com', phone: '123-456-7890', city: 'Rome', country: 'Italy' },
+      { id: 10, name: 'Isabella Scott', email: 'isabella@example.com', phone: '456-789-0123', city: 'Moscow', country: 'Russia' },
+    ],
+  });
 
-  // Sample data for different categories
-  const categoriesData = {
-	orders: [
-		{ id: 1, customer: 'John Doe', product: 'Laptop', quantity: 2, total: '$2000', date: '2023-05-10', status: 'pending' },
-		{ id: 2, customer: 'Jane Smith', product: 'Smartphone', quantity: 1, total: '$800', date: '2023-05-12', status: 'active' },
-		{ id: 3, customer: 'Mike Johnson', product: 'Tablet', quantity: 3, total: '$1200', date: '2023-05-15', status: 'active' },
-		{ id: 4, customer: 'Emily Brown', product: 'Monitor', quantity: 1, total: '$600', date: '2023-05-18', status: 'completed' },
-		{ id: 5, customer: 'Chris Davis', product: 'Keyboard', quantity: 2, total: '$200', date: '2023-05-20', status: 'pending' },
-		{ id: 6, customer: 'Sarah White', product: 'Mouse', quantity: 1, total: '$50', date: '2023-05-22', status: 'active' },
-		{ id: 7, customer: 'Alex Green', product: 'Printer', quantity: 1, total: '$300', date: '2023-05-25', status: 'pending' },
-		{ id: 8, customer: 'Grace Wilson', product: 'Headphones', quantity: 2, total: '$400', date: '2023-05-28', status: 'completed' },
-		{ id: 9, customer: 'Olivia Taylor', product: 'Camera', quantity: 1, total: '$900', date: '2023-05-30', status: 'completed' },
-		{ id: 10, customer: 'Ethan Martinez', product: 'Smartwatch', quantity: 1, total: '$350', date: '2023-06-01', status: 'pending' },
-	  
-	  ],
-	  sales: [
-		{ id: 1, customer: 'Alice Brown', product: 'Tablet', quantity: 3, total: '$1500', date: '2023-05-10' },
-		{ id: 2, customer: 'Bob Green', product: 'Headphones', quantity: 2, total: '$300', date: '2023-05-12' },
-		{ id: 3, customer: 'Sophia Lee', product: 'Smartphone', quantity: 1, total: '$800', date: '2023-05-15' },
-		{ id: 4, customer: 'William Clark', product: 'Laptop', quantity: 2, total: '$2000', date: '2023-05-18' },
-		{ id: 5, customer: 'Zoe Hall', product: 'Keyboard', quantity: 2, total: '$200', date: '2023-05-20' },
-		{ id: 6, customer: 'Lucas Turner', product: 'Mouse', quantity: 1, total: '$50', date: '2023-05-22' },
-		{ id: 7, customer: 'Ava Hill', product: 'Monitor', quantity: 1, total: '$600', date: '2023-05-25' },
-		{ id: 8, customer: 'Jack Scott', product: 'Printer', quantity: 1, total: '$300', date: '2023-05-28' },
-		{ id: 9, customer: 'Lily Reed', product: 'Camera', quantity: 1, total: '$900', date: '2023-05-30' },
-		{ id: 10, customer: 'Noah Baker', product: 'Smartwatch', quantity: 1, total: '$350', date: '2023-06-01' },
-	  ],
-	  customers: [
-		{ id: 1, name: 'Emily Johnson', email: 'emily@example.com', phone: '123-456-7890', city: 'New York', country: 'USA' },
-		{ id: 2, name: 'Michael Davis', email: 'michael@example.com', phone: '987-654-3210', city: 'Los Angeles', country: 'USA' },
-		{ id: 3, name: 'Sophie Wilson', email: 'sophie@example.com', phone: '456-789-0123', city: 'London', country: 'UK' },
-		{ id: 4, name: 'Daniel Brown', email: 'daniel@example.com', phone: '321-654-9870', city: 'Toronto', country: 'Canada' },
-		{ id: 5, name: 'Emma Miller', email: 'emma@example.com', phone: '789-012-3456', city: 'Berlin', country: 'Germany' },
-		{ id: 6, name: 'Matthew Harris', email: 'matthew@example.com', phone: '234-567-8901', city: 'Sydney', country: 'Australia' },
-		{ id: 7, name: 'Olivia Martinez', email: 'olivia@example.com', phone: '567-890-1234', city: 'Paris', country: 'France' },
-		{ id: 8, name: 'Lucas Robinson', email: 'lucas@example.com', phone: '890-123-4567', city: 'Tokyo', country: 'Japan' },
-		{ id: 9, name: 'Chloe Allen', email: 'chloe@example.com', phone: '123-456-7890', city: 'Rome', country: 'Italy' },
-		{ id: 10, name: 'Isabella Scott', email: 'isabella@example.com', phone: '456-789-0123', city: 'Moscow', country: 'Russia' },
-	  ],
-	};
+  const [formData, setFormData] = useState({});
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleAddEntry = () => {
+    setCategoriesData((prevCategoriesData) => ({
+      ...prevCategoriesData,
+      [selectedCategory]: [
+        ...prevCategoriesData[selectedCategory],
+        { id: prevCategoriesData[selectedCategory].length + 1, ...formData },
+      ],
+    }));
+    setFormData({});
+  };
+
+  const handleExportSheet = () => {
+    const worksheet = XLSX.utils.json_to_sheet(categoriesData[selectedCategory]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, selectedCategory);
+    XLSX.writeFile(workbook, `${selectedCategory}.xlsx`);
   };
 
   return (
@@ -69,21 +95,21 @@ const TablesPage = () => {
             </select>
           </div>
           <div className='flex gap-4'>
-            <button className='bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded'>
+            <button className='bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded' onClick={handleAddEntry}>
               Add
             </button>
-            <button className='bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded'>
+            <button className='bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded' onClick={handleExportSheet}>
               Export Sheet
             </button>
           </div>
         </div>
-        <div className='overflow-x-auto'>
+        <div className='overflow-x-auto mb-4'>
           <table className='min-w-full bg-gray-800'>
             <thead>
               <tr className='bg-gray-700'>
                 {selectedCategory === 'orders' && (
                   <>
-                     <th className='border px-4 py-2'>ID</th>
+                    <th className='border px-4 py-2'>ID</th>
                     <th className='border px-4 py-2'>Customer</th>
                     <th className='border px-4 py-2'>Product</th>
                     <th className='border px-4 py-2'>Quantity</th>
@@ -125,7 +151,7 @@ const TablesPage = () => {
                       <td className='border px-4 py-2'>{item.quantity}</td>
                       <td className='border px-4 py-2'>{item.total}</td>
                       <td className='border px-4 py-2'>{item.date}</td>
-					  <td className='border px-4 py-2'>{item.status}</td>
+                      <td className='border px-4 py-2'>{item.status}</td>
                     </>
                   )}
                   {selectedCategory === 'sales' && (
@@ -152,6 +178,148 @@ const TablesPage = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className='mb-4 mt-4 gap-5'>
+          {selectedCategory === 'orders' && (
+            <>
+              <input
+                type='text'
+                name='customer'
+                placeholder='Customer'
+                value={formData.customer || ''}
+                onChange={handleInputChange}
+                className='p-2 mb-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='text'
+                name='product'
+                placeholder='Product'
+                value={formData.product || ''}
+                onChange={handleInputChange}
+                className='p-2  mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='number'
+                name='quantity'
+                placeholder='Quantity'
+                value={formData.quantity || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='text'
+                name='total'
+                placeholder='Total'
+                value={formData.total || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='date'
+                name='date'
+                placeholder='Date'
+                value={formData.date || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='text'
+                name='status'
+                placeholder='Status'
+                value={formData.status || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+            </>
+          )}
+          {selectedCategory === 'sales' && (
+            <>
+              <input
+                type='text'
+                name='customer'
+                placeholder='Customer'
+                value={formData.customer || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='text'
+                name='product'
+                placeholder='Product'
+                value={formData.product || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='number'
+                name='quantity'
+                placeholder='Quantity'
+                value={formData.quantity || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='text'
+                name='total'
+                placeholder='Total'
+                value={formData.total || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='date'
+                name='date'
+                placeholder='Date'
+                value={formData.date || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+            </>
+          )}
+          {selectedCategory === 'customers' && (
+            <>
+              <input
+                type='text'
+                name='name'
+                placeholder='Name'
+                value={formData.name || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='email'
+                name='email'
+                placeholder='Email'
+                value={formData.email || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='tel'
+                name='phone'
+                placeholder='Phone'
+                value={formData.phone || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='text'
+                name='city'
+                placeholder='City'
+                value={formData.city || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+              <input
+                type='text'
+                name='country'
+                placeholder='Country'
+                value={formData.country || ''}
+                onChange={handleInputChange}
+                className='p-2 mt-2 mr-2 border border-gray-700 rounded bg-gray-700 text-white'
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
